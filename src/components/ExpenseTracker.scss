@@ -1,0 +1,28 @@
+.Expense_Calculator_div {
+    .Expense_Calculator {
+        display: flex;
+        gap: 20px;
+        padding: 20px;
+        .input_div {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            input {
+                border: none;
+                border-bottom: 2px solid rgb(33,53,71);
+                padding: 10px;
+                outline: none;
+            }
+
+        }
+    }
+    .Expense_display {
+        .display_div {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            justify-content: space-between;
+            padding: 20px;
+        }
+    }
+}
