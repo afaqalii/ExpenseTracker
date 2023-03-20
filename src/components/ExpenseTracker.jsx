@@ -5,14 +5,29 @@ const ExpenseTracker = () => {
 
     const [BudgetValues, setBudgetValues] = useState([])
     const [ProductName, setProductName] = useState("")
-    const [ProductPrice, setProductPrice] = useState("")
+    const [ProductPrice, setProductPrice] = useState()
+    const [TotalSpending, setTotalSpending] = useState([0])
+    const [DisplayTotalSpentNumber, setDisplayTotalSpentNumber] = useState()
+
     const GetBudgetValues = () => {
-        setBudgetValues((prevState => [...prevState, {ProductName, ProductPrice}]))
-        setProductName("")
-        setProductPrice("")
-        console.log(BudgetValues)
+        if(ProductName && ProductPrice) {
+            setBudgetValues((prevState => [...prevState, {ProductName, ProductPrice}]))
+            setProductName("")
+            setProductPrice("")
+            setTotalSpending([ ProductPrice + ProductPrice ])
+            const TotalSpendingSum = TotalSpending.reduce((a,b) => +a + +b)
+            setDisplayTotalSpentNumber(TotalSpendingSum)
+            console.log(BudgetValues)
+        }else{
+            alert("Input field is empty")
+        }
     }
-  return (
+    const ClearExpenses = () => {
+        setBudgetValues([])
+        setDisplayTotalSpentNumber(0)
+    }
+
+    return (
     <div className='Expense_Calculator_div'>
         <h1>Budget Calculator</h1>
         <div className="Expense_Calculator">
@@ -22,7 +37,7 @@ const ExpenseTracker = () => {
             </div>    
             <div className="input_div">
                 <label htmlFor="">Product Price</label>
-                <input type="text" value={ProductPrice} onChange={e => setProductPrice(e.target.value)} placeholder='$$$' name="" id="" />
+                <input type="number" value={ProductPrice} onChange={e => setProductPrice(e.target.value)} placeholder='$$$' name="" id="" />
             </div>
             <button onClick={GetBudgetValues}>Submit</button>
             
@@ -42,9 +57,9 @@ const ExpenseTracker = () => {
                     </div>
              )}))   
             }
-            {BudgetValues.length > 0 ? <><button>Clear Expenses</button></>:<></>}
+            {BudgetValues.length > 0 ? <><button onClick={ClearExpenses}>Clear Expenses</button></>:<></>}
         
-        <h1>Total Spending : $0</h1>
+        <h1>Total Spending : ${DisplayTotalSpentNumber}</h1>
     </div>
   )
 }
