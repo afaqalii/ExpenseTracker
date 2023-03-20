@@ -15,7 +15,7 @@ const ExpenseTracker = () => {
             setProductName("")
             setProductPrice("")
             setTotalSpending([ ProductPrice + ProductPrice ])
-            const TotalSpendingSum = TotalSpending.reduce((a,b) => +a + +b)
+            const TotalSpendingSum = TotalSpending.reduce((a,b) =>  +a + +b)
             setDisplayTotalSpentNumber(TotalSpendingSum)
             console.log(BudgetValues)
         }else{
