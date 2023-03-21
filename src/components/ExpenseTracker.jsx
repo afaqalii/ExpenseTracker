@@ -8,6 +8,7 @@ const ExpenseTracker = () => {
     const [ProductPrice, setProductPrice] = useState()
     const [TotalSpending, setTotalSpending] = useState([0])
     const [DisplayTotalSpentNumber, setDisplayTotalSpentNumber] = useState()
+    const ProductNameRef = useRef()
 
     const GetBudgetValues = (e) => {
         e.preventDefault()
@@ -33,6 +34,9 @@ const ExpenseTracker = () => {
     }
     const EditExpenses = (id) => {
          const ItemEdited = BudgetValues.find(item => item.id === id)
+         setProductName(ItemEdited.ProductName)
+         setProductPrice(ItemEdited.ProductPrice)
+         ProductNameRef.current.focus()
         // setProductName("Afaq")
         // setProductPrice("$000")
     }
@@ -48,7 +52,7 @@ const ExpenseTracker = () => {
             <form onSubmit={GetBudgetValues}>
                 <div className="input_div">
                     <label htmlFor="">Product Name</label>
-                    <input type="text" value={ProductName} onChange={e => setProductName(e.target.value)}  placeholder='Enter name......' />
+                    <input ref={ProductNameRef} type="text" value={ProductName} onChange={e => setProductName(e.target.value)}  placeholder='Enter name......' />
                 </div>    
                 <div className="input_div">
                     <label htmlFor="">Product Price</label>
