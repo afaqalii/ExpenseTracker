@@ -13,13 +13,13 @@ const ExpenseTracker = () => {
     const GetBudgetValues = (e) => {
         e.preventDefault()
         if(ProductName && ProductPrice) {
-            setBudgetValues((prevState => [...prevState, {ProductName, ProductPrice, id: v4()}]))
+            setBudgetValues((prevState => [...prevState, {ProductName, ProductPrice: parseInt(ProductPrice), id: v4()}]))
+            const Total = BudgetValues.reduce((value, item) => {
+                return value + item.ProductPrice
+            }, parseInt(ProductPrice)) 
+             setDisplayTotalSpentNumber(Total)
             setProductName("")
             setProductPrice("")
-            setTotalSpending([ ProductPrice + ProductPrice ])
-            const TotalSpendingSum = TotalSpending.reduce((a,b) =>  +a + +b)
-            setDisplayTotalSpentNumber(TotalSpendingSum)
-            console.log(BudgetValues)
         }else{
             alert("Input field is empty")
         }
@@ -33,7 +33,11 @@ const ExpenseTracker = () => {
        setBudgetValues(DeletedItem)
     }
     const EditExpenses = (id) => {
-         const ItemEdited = BudgetValues.find(item => item.id === id)
+         const ItemEdited = BudgetValues.find(item => {
+                item.id === id}
+          )
+         console.log(ItemEdited)
+        //  const ValuesToBeEdited = BudgetValues.map((item) => item.id === id )
          setProductName(ItemEdited.ProductName)
          setProductPrice(ItemEdited.ProductPrice)
          ProductNameRef.current.focus()
@@ -42,6 +46,8 @@ const ExpenseTracker = () => {
     }
     const checkConsole  = () => {
         console.log(BudgetValues)
+        console.log(ProductPrice)
+        console.log(typeof(ProductPrice))
     }
  
     return (
@@ -56,7 +62,7 @@ const ExpenseTracker = () => {
                 </div>    
                 <div className="input_div">
                     <label htmlFor="">Product Price</label>
-                    <input type="number" value={ProductPrice} onChange={e => setProductPrice(e.target.value)} placeholder='$$$' name="" id="" />
+                    <input type="number" value={ProductPrice} onChange={e => setProductPrice(e.target.value)} placeholder='$$$'/>
                 </div>
             </form>
             <button onClick={GetBudgetValues}>Submit</button>
