@@ -1,17 +1,18 @@
 import React, { useRef, useState, useEffect } from 'react'
+import {v4} from "uuid"
 import "./ExpenseTracker.scss"
 
 const ExpenseTracker = () => {
-
     const [BudgetValues, setBudgetValues] = useState([])
     const [ProductName, setProductName] = useState("")
     const [ProductPrice, setProductPrice] = useState()
     const [TotalSpending, setTotalSpending] = useState([0])
     const [DisplayTotalSpentNumber, setDisplayTotalSpentNumber] = useState()
 
-    const GetBudgetValues = () => {
+    const GetBudgetValues = (e) => {
+        e.preventDefault()
         if(ProductName && ProductPrice) {
-            setBudgetValues((prevState => [...prevState, {ProductName, ProductPrice}]))
+            setBudgetValues((prevState => [...prevState, {ProductName, ProductPrice, id: v4()}]))
             setProductName("")
             setProductPrice("")
             setTotalSpending([ ProductPrice + ProductPrice ])
@@ -26,32 +27,48 @@ const ExpenseTracker = () => {
         setBudgetValues([])
         setDisplayTotalSpentNumber(0)
     }
-
+    const DeleteExpenses = (id) => {
+       const DeletedItem =  BudgetValues.filter(item => item.id !== id)
+       setBudgetValues(DeletedItem)
+    }
+    const EditExpenses = (id) => {
+         const ItemEdited = BudgetValues.find(item => item.id === id)
+        // setProductName("Afaq")
+        // setProductPrice("$000")
+    }
+    const checkConsole  = () => {
+        console.log(BudgetValues)
+    }
+ 
     return (
     <div className='Expense_Calculator_div'>
         <h1>Budget Calculator</h1>
+        <button onClick={checkConsole}>Check console</button>
         <div className="Expense_Calculator">
-            <div className="input_div">
-                <label htmlFor="">Product Name</label>
-                <input type="text" value={ProductName} onChange={e => setProductName(e.target.value)}  placeholder='Enter name......' name="" />
-            </div>    
-            <div className="input_div">
-                <label htmlFor="">Product Price</label>
-                <input type="number" value={ProductPrice} onChange={e => setProductPrice(e.target.value)} placeholder='$$$' name="" id="" />
-            </div>
+            <form onSubmit={GetBudgetValues}>
+                <div className="input_div">
+                    <label htmlFor="">Product Name</label>
+                    <input type="text" value={ProductName} onChange={e => setProductName(e.target.value)}  placeholder='Enter name......' />
+                </div>    
+                <div className="input_div">
+                    <label htmlFor="">Product Price</label>
+                    <input type="number" value={ProductPrice} onChange={e => setProductPrice(e.target.value)} placeholder='$$$' name="" id="" />
+                </div>
+            </form>
             <button onClick={GetBudgetValues}>Submit</button>
             
         </div>
         {BudgetValues?.map((budgetValue => {
-        
+               const {id} = budgetValue
+         
             return (
                   <div className="Expense_display">
                         <div className="display_div">
                                     <p className='display_name'>{budgetValue?.ProductName}</p>
-                                    <p className='display_price'>{budgetValue?.ProductPrice}</p>
+                                    <p className='display_price'>${budgetValue?.ProductPrice}</p>
                                 <div className="display_buttons">
-                                    <button>Edit</button>
-                                        <button>Delete</button>
+                                    <button onClick={() => EditExpenses(id)}>Edit</button>
+                                    <button onClick={() => DeleteExpenses(id)}>Delete</button>
                                 </div>
                         </div>
                     </div>

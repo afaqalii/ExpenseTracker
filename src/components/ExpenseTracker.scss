@@ -1,18 +1,25 @@
 .Expense_Calculator_div {
     .Expense_Calculator {
         display: flex;
+        justify-content: center;
         gap: 20px;
+        align-items: center;
         padding: 20px;
-        .input_div {
+        form {
             display: flex;
-            flex-direction: column;
-            gap: 10px;
-            input {
-                border: none;
-                border-bottom: 2px solid rgb(33,53,71);
-                padding: 10px;
+            gap: 20px;
+            .input_div {
+                display: flex;
+                flex-direction: column;
+                gap: 10px;
+                text-align: left;
+                input {
+                    border: none;
+                    border-bottom: 2px solid rgb(33,53,71);
+                    padding: 10px 0;
+                }
+    
             }
-
         }
     }
     .Expense_display {
