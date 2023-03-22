@@ -7,17 +7,26 @@ const ExpenseTracker = () => {
     const [ProductName, setProductName] = useState("")
     const [ProductPrice, setProductPrice] = useState()
     const [TotalSpending, setTotalSpending] = useState([0])
+    const [edit, setEdit] = useState(false)
     const [DisplayTotalSpentNumber, setDisplayTotalSpentNumber] = useState()
+    const [id, setId] = useState()
     const ProductNameRef = useRef()
 
     const GetBudgetValues = (e) => {
         e.preventDefault()
         if(ProductName && ProductPrice) {
-            setBudgetValues((prevState => [...prevState, {ProductName, ProductPrice: parseInt(ProductPrice), id: v4()}]))
+            if(edit) {
+                let ItemEdited = BudgetValues.map(item => {
+                  return  item.id === id ? {...item, ProductName, ProductPrice} : item
+                })
+                setBudgetValues(ItemEdited)
+            }else {
+                setBudgetValues((prevState => [...prevState, {ProductName, ProductPrice: parseInt(ProductPrice), id: v4()}]))
+            }
             const Total = BudgetValues.reduce((value, item) => {
-                return value + item.ProductPrice
-            }, parseInt(ProductPrice)) 
-             setDisplayTotalSpentNumber(Total)
+                return value += item.ProductPrice
+                }, parseInt(ProductPrice)) 
+            setDisplayTotalSpentNumber(Total)
             setProductName("")
             setProductPrice("")
         }else{
@@ -33,27 +42,17 @@ const ExpenseTracker = () => {
        setBudgetValues(DeletedItem)
     }
     const EditExpenses = (id) => {
-         const ItemEdited = BudgetValues.find(item => {
-                item.id === id}
-          )
-         console.log(ItemEdited)
-        //  const ValuesToBeEdited = BudgetValues.map((item) => item.id === id )
+         const ItemEdited = BudgetValues.find(item => item.id === id)  
          setProductName(ItemEdited.ProductName)
          setProductPrice(ItemEdited.ProductPrice)
          ProductNameRef.current.focus()
-        // setProductName("Afaq")
-        // setProductPrice("$000")
-    }
-    const checkConsole  = () => {
-        console.log(BudgetValues)
-        console.log(ProductPrice)
-        console.log(typeof(ProductPrice))
+         setEdit(true)
+         setId(id)
     }
  
     return (
     <div className='Expense_Calculator_div'>
         <h1>Budget Calculator</h1>
-        <button onClick={checkConsole}>Check console</button>
         <div className="Expense_Calculator">
             <form onSubmit={GetBudgetValues}>
                 <div className="input_div">
@@ -64,9 +63,9 @@ const ExpenseTracker = () => {
                     <label htmlFor="">Product Price</label>
                     <input type="number" value={ProductPrice} onChange={e => setProductPrice(e.target.value)} placeholder='$$$'/>
                 </div>
-            </form>
-            <button onClick={GetBudgetValues}>Submit</button>
-            
+            <button type='submit'>Submit</button>
+
+            </form>            
         </div>
         {BudgetValues?.map((budgetValue => {
                const {id} = budgetValue
