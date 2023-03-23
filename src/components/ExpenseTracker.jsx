@@ -5,7 +5,7 @@ import "./ExpenseTracker.scss"
 const ExpenseTracker = () => {
     const [BudgetValues, setBudgetValues] = useState([])
     const [ProductName, setProductName] = useState("")
-    const [ProductPrice, setProductPrice] = useState()
+    const [ProductPrice, setProductPrice] = useState(0)
     const [TotalSpending, setTotalSpending] = useState([0])
     const [edit, setEdit] = useState(false)
     const [DisplayTotalSpentNumber, setDisplayTotalSpentNumber] = useState()
@@ -17,15 +17,14 @@ const ExpenseTracker = () => {
         if(ProductName && ProductPrice) {
             if(edit) {
                 let ItemEdited = BudgetValues.map(item => {
-                  return  item.id === id ? {...item, ProductName, ProductPrice} : item
+                  return  item.id === id ? {...item, ProductName, ProductPrice: parseInt(ProductPrice) } : item
                 })
                 setBudgetValues(ItemEdited)
+                setEdit(false)
             }else {
                 setBudgetValues((prevState => [...prevState, {ProductName, ProductPrice: parseInt(ProductPrice), id: v4()}]))
             }
-            const Total = BudgetValues.reduce((value, item) => {
-                return value += item.ProductPrice
-                }, parseInt(ProductPrice)) 
+            let Total = BudgetValues.reduce((accumulator, item) => accumulator + item.ProductPrice, parseInt(ProductPrice)) 
             setDisplayTotalSpentNumber(Total)
             setProductName("")
             setProductPrice("")
@@ -38,17 +37,23 @@ const ExpenseTracker = () => {
         setDisplayTotalSpentNumber(0)
     }
     const DeleteExpenses = (id) => {
-       const DeletedItem =  BudgetValues.filter(item => item.id !== id)
-       setBudgetValues(DeletedItem)
+       const filteredArrayofItems =  BudgetValues.filter(item => item.id !== id)
+       setBudgetValues(filteredArrayofItems)
+       let deletedItem = BudgetValues.find(item => item.id === id)
+       let DeletedAmount =  DisplayTotalSpentNumber - deletedItem.ProductPrice
+       setDisplayTotalSpentNumber(DeletedAmount)
     }
     const EditExpenses = (id) => {
          const ItemEdited = BudgetValues.find(item => item.id === id)  
          setProductName(ItemEdited.ProductName)
          setProductPrice(ItemEdited.ProductPrice)
+         let DeletedAmount =  DisplayTotalSpentNumber - ItemEdited.ProductPrice
+         setDisplayTotalSpentNumber(DeletedAmount)
          ProductNameRef.current.focus()
          setEdit(true)
          setId(id)
     }
+    
  
     return (
     <div className='Expense_Calculator_div'>
